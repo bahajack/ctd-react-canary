@@ -4,13 +4,16 @@ import AddTodoForm from './AddTodoForm.js';
 
 
 function App() {
+
   return (
 
-    <h1>Todo List</h1>
-     <div>
-       <AddTodoForm />
-       <TodoList />
-     </div>
+      <h1>Todo List</h1>,
+      <div>
+      <AddTodoForm />
+
+      <TodoList />
+      </div>
+
 
 
 );
