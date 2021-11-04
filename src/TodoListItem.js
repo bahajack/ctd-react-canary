@@ -1,8 +1,12 @@
 import * as React from 'react';
 
-function TodoListItem(){
+const TodoListItem = ({ todo }) => {
   return(
+    <li>
 
+     {todo.title}
+
+     </li>
   )
 }
 
