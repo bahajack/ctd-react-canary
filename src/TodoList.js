@@ -20,7 +20,7 @@ const todoList = [
 
 ];
 
-function TodoList(){
+const TodoList = ({todoList}) => {
   return(
     <ul>
       {todoList.map(item => {
@@ -29,7 +29,7 @@ function TodoList(){
 
          })}
        </ul>
-      );
-     }
+      )
+    };
 
 export default TodoList;
