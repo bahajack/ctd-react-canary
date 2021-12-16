@@ -1,6 +1,7 @@
 import {React, useState, useEffect} from 'react';
 import TodoList from './TodoList.js';
 import AddTodoForm from './AddTodoForm.js';
+//import InputWithLabel from './InputWithLabel.js';
 
 const useSemiPersistentState = () => {
   const [todoList,setTodoList] = useState(JSON.parse(localStorage.getItem('savedTodoList')) || []);
@@ -17,7 +18,12 @@ function App() {
    setTodoList([...todoList,newTodo]);
    }
 
-
+const removeTodo = (id) => {
+   const newTodo = todoList.filter((item) => {
+     return item.id !== id;
+   })
+   setTodoList(newTodo);
+};
 
   return (
     <>
@@ -25,7 +31,7 @@ function App() {
 
       <AddTodoForm onAddTodo={addTodo} />
 
-      <TodoList todoList={todoList} />
+      <TodoList onRemoveTodo={removeTodo} todoList={todoList} />
     </>
 
 

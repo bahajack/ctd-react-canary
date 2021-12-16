@@ -20,11 +20,11 @@ const todoList = [
 
 ];
 
-const TodoList = ({todoList}) => {
+const TodoList = ({todoList, onRemoveTodo}) => {
   return(
     <ul>
       {todoList.map(item => {
-         return <TodoListItem todo={item} key={item.id} />
+         return <TodoListItem onRemoveTodo={onRemoveTodo} todo={item} key={item.id} />
 
 
          })}
