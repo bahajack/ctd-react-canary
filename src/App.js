@@ -1,25 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import {React, useState, useEffect} from 'react';
+import TodoList from './TodoList.js';
+import AddTodoForm from './AddTodoForm.js';
+
+
+const useSemiPersistentState = () => {
+  const [todoList,setTodoList] = useState(JSON.parse(localStorage.getItem('savedTodoList')) || []);
+  useEffect(() => {
+    localStorage.setItem('savedTodoList', JSON.stringify(todoList));
+  }, [todoList]);
+  return [todoList, setTodoList];
+};
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+   const [todoList, setTodoList] = useSemiPersistentState();
 
+   const addTodo = (newTodo) => {
+   setTodoList([...todoList,newTodo]);
+   }
+
+const removeTodo = (id) => {
+   const newTodo = todoList.filter((item) => {
+     return item.id !== id;
+   })
+   setTodoList(newTodo);
+};
+
+  return (
+    <>
+      <h1>Todo List</h1>,
+
+      <AddTodoForm onAddTodo={addTodo} />
+
+      <TodoList onRemoveTodo={removeTodo} todoList={todoList} />
+    </>
+
+
+
+);
+}
 export default App;
