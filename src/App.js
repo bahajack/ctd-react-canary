@@ -1,57 +1,49 @@
-import React, {useState, useEffect} from 'react';
-import TodoList from './TodoList.js';
-import AddTodoForm from './AddTodoForm.js';
-
-
-
+import React from 'react';
+import TodoList from './TodoList';
+import AddTodoForm from './AddTodoForm';
 
 function App() {
 
+  const [todoList, setTodoList] = React.useState([]);
+  const [isLoading, setIsloading] = React.useState(true);
 
-   const [todoList,setTodoList] = useState([]);
-   const [isLoading, setIsLoading]=useState(true);
-   useEffect(() => {
-     new Promise((resolve, reject)=>{
-       setTimeout(()=>{
-         resolve({data:{
-           todoList:JSON.parse(localStorage.getItem('savedTodoList')),
-         }})
-       }, 2000);
-     })
-      .then((result)=>{
-        setTodoList(result.data.todoList);
-        setIsLoading(false);
-      })
-   },[])
+  React.useEffect(() =>{
+    fetch(`https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/Default`,
+    {headers:{ Authorization: `Bearer ${process.env.REACT_APP_AIRTABLE_API_KEY}`}})
+    .then((response) => response.json())
+    .then((result) =>
+    {
+      setIsloading(false);
+      setTodoList(result.records);
+    }
+  )});
 
-   useEffect(() => {
-     if(!isLoading){
-     localStorage.setItem('savedTodoList', JSON.stringify(todoList));}
-   }, [todoList]);
+  React.useEffect(() => {
+    localStorage.setItem('savedTodoList', JSON.stringify(todoList));
+  }, [todoList]);
 
-   const addTodo = (newTodo) => {
-   setTodoList([...todoList,newTodo]);
-   }
+  function addTodo(newTodo) {
+   setTodoList([...todoList, newTodo]);
+  }
 
-const removeTodo = (id) => {
-   const newTodo = todoList.filter((item) => {
-     return item.id !== id;
-   })
-   setTodoList(newTodo);
-};
+  function removeTodo(id) {
+   let newTodoList = todoList.filter((todo) => {
+     return todo.id !== id;
+    });
+    setTodoList(newTodoList);
+  }
 
   return (
-    <>
-      <h1>Todo List</h1>,
-
-      <AddTodoForm onAddTodo={addTodo} />
-      {isLoading ? <p>Loading...</p> :
-      <TodoList onRemoveTodo={removeTodo} todoList={todoList} />
-      }
+   <>
+    <h1>Todo List</h1>
+    <AddTodoForm onAddTodo={addTodo}/>
+    { isLoading ? (
+    <p>Loading...</p>
+    ) : (
+    <TodoList todoList={todoList} onRemoveTodo={removeTodo} />
+    )}
     </>
-
-
-
-);
+  );
 }
+
 export default App;
